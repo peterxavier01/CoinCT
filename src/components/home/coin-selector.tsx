@@ -9,23 +9,32 @@ import {
   SelectTrigger,
 } from "../ui/select";
 
-const CoinSelector = () => {
+interface CoinSelectorProps {
+  coins: FormattedCoin[];
+  coinId: string;
+  setCoinId: (coinId: string) => void;
+}
+
+const CoinSelector = ({ coins, coinId, setCoinId }: CoinSelectorProps) => {
   return (
-    <Select defaultValue="usd">
-      <SelectTrigger className="w-[100px] rounded-sm">
+    <Select value={coinId} onValueChange={setCoinId}>
+      <SelectTrigger className="w-[110px] rounded-[0.5rem] dark:bg-dark-400">
         <SelectValue />
       </SelectTrigger>
 
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="usd">
-            <Image src="/usd.svg" alt="USD" width={15} height={15} />
-            <span>USD</span>
-          </SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-          <SelectItem value="blueberry">Blueberry</SelectItem>
-          <SelectItem value="grapes">Grapes</SelectItem>
-          <SelectItem value="pineapple">Pineapple</SelectItem>
+          {coins.map((coin) => (
+            <SelectItem key={coin.id} value={coin.id}>
+              <Image
+                src={coin.image}
+                alt={coin.symbol}
+                width={15}
+                height={15}
+              />
+              <span className="uppercase text-sm">{coin.symbol}</span>
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>
