@@ -47,10 +47,27 @@ export const useCoin = (coinId?: string) => {
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
 
+  /**
+   * Get the coins markets
+   * Used for the line chart in the CoinsList component
+   */
+  const coinsMarketsQuery = useQuery({
+    queryKey: ["coins-markets", coinId],
+    queryFn: () =>
+      fetcher<CoinListData[]>(`/coins/${coinId}/market_chart`, {
+        vs_currency: "usd",
+        days: 1,
+      }),
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
+    enabled: !!coinId,
+  });
+
   return {
     coinQuery,
     ohlcQuery,
     coinsQuery,
     trendingCoinsQuery,
+    coinsMarketsQuery,
   };
 };
