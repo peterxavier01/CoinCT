@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { fetcher } from "@/actions/coin-gecko.actions";
 
-export const useCoin = (coinId: string) => {
+export const useCoin = (coinId?: string) => {
   const coinQuery = useQuery({
     queryKey: ["coin", coinId],
     queryFn: () =>
@@ -10,7 +10,7 @@ export const useCoin = (coinId: string) => {
         dex_pair_format: "symbol",
       }),
     enabled: !!coinId,
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
 
@@ -23,7 +23,7 @@ export const useCoin = (coinId: string) => {
         precision: "full",
       }),
     enabled: !!coinId,
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
 
@@ -35,8 +35,15 @@ export const useCoin = (coinId: string) => {
         symbols: "btc, eth, sol, dot, doge, usdt, usdc, bnb, xrp, ltc",
         price_change_percentage: "24h",
       }),
-    enabled: true,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
+  });
+
+  const trendingCoinsQuery = useQuery({
+    queryKey: ["trending-coins"],
+    queryFn: () =>
+      fetcher<TrendingCoinsResponse>("/search/trending", undefined, 300),
+    staleTime: 1000 * 60 * 30, // 30 minutes
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
 
@@ -44,5 +51,6 @@ export const useCoin = (coinId: string) => {
     coinQuery,
     ohlcQuery,
     coinsQuery,
+    trendingCoinsQuery,
   };
 };

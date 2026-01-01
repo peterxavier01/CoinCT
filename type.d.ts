@@ -13,8 +13,8 @@ interface CandlestickChartProps {
   children?: React.ReactNode;
   mode?: "historical" | "live";
   initialPeriod?: Period;
-  liveInterval: "1s" | "1m";
-  setLiveInterval: (interval: "1s" | "1m") => void;
+  liveInterval?: "1s" | "1m";
+  setLiveInterval?: (interval: "1s" | "1m") => void;
 }
 
 interface ConverterProps {
@@ -73,21 +73,39 @@ interface CoinMarketData {
   last_updated: string;
 }
 
-interface TrendingCoin {
-  item: {
-    id: string;
-    name: string;
-    symbol: string;
-    market_cap_rank: number;
-    thumb: string;
-    large: string;
-    data: {
-      price: number;
-      price_change_percentage_24h: {
-        usd: number;
-      };
+interface TrendingCoinItem {
+  id: string;
+  coin_id: number;
+  name: string;
+  symbol: string;
+  market_cap_rank: number;
+  thumb: string;
+  large: string;
+  small: string;
+  slug: string;
+  price_btc: number;
+  score: number;
+  data: {
+    price: number;
+    price_btc: string;
+    price_change_percentage_24h: {
+      usd: number;
     };
+    market_cap: string;
+    market_cap_btc: string;
+    total_volume: string;
+    total_volume_btc: string;
+    sparkline: string;
+    content: null;
   };
+}
+
+interface TrendingCoin {
+  item: TrendingCoinItem;
+}
+
+interface TrendingCoinsResponse {
+  coins: TrendingCoin[];
 }
 
 interface SearchCoin {

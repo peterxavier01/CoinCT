@@ -7,6 +7,7 @@ import { CoinOverviewFallback } from "./fallback";
 import ChartHeader from "./chart-header";
 
 import { useCoin } from "@/hooks/use-coin";
+import CandlestickChart from "../candlestick-chart";
 
 const CoinOverview = () => {
   const [coinId, setCoinId] = useState<string>("bitcoin");
@@ -29,7 +30,7 @@ const CoinOverview = () => {
   }));
 
   return (
-    <section id="coin-overview" className="py-6 px-7.5">
+    <section id="coin-overview" className="py-6 px-4 md:px-7.5">
       <div className="flex items-center justify-between mb-7.5">
         <h3 className="text-2xl font-semibold">Chart</h3>
 
@@ -42,7 +43,9 @@ const CoinOverview = () => {
         </Activity>
       </div>
 
-      <ChartHeader key={coin.id} coin={coin} />
+      <CandlestickChart data={coinOHLCData} coinId={coinId}>
+        <ChartHeader key={coin.id} coin={coin} />
+      </CandlestickChart>
     </section>
   );
 };
