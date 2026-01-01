@@ -76,6 +76,10 @@ export const getChartConfig = (
   },
 });
 
+/**
+ * Period configuration for the chart.
+ * `max` is not supported on demo API.
+ */
 export const PERIOD_CONFIG: Record<
   Period,
   { days: number | string; interval?: "hourly" | "daily" }
@@ -96,7 +100,7 @@ export const PERIOD_BUTTONS: { value: Period; label: string }[] = [
   { value: "3months", label: "3M" },
   { value: "6months", label: "6M" },
   { value: "yearly", label: "1Y" },
-  { value: "max", label: "Max" },
+  // { value: "max", label: "Max" },
 ];
 
 export const LIVE_INTERVAL_BUTTONS: { value: "1s" | "1m"; label: string }[] = [
