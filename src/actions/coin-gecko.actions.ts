@@ -2,6 +2,8 @@
 
 import qs from "query-string";
 
+import { ApiError } from "@/errors/api-error";
+
 const BASE_URL = process.env.COINGECKO_BASE_URL;
 const API_KEY = process.env.COINGECKO_API_KEY;
 
@@ -21,27 +23,56 @@ export async function fetcher<T>(
     { skipEmptyString: true, skipNull: true }
   );
 
-  const response = await fetch(url, {
-    headers: {
-      "x-cg-demo-api-key": API_KEY,
-      "Content-Type": "application/json",
-    } as Record<string, string>,
-    next: { revalidate },
-  });
+  let response: Response;
 
-  if (!response.ok) {
-    const errorBody: CoinGeckoErrorBody = await response
-      .json()
-      .catch(() => ({}));
-
-    throw new Error(
-      `API Error: ${response.status}: ${
-        errorBody.error || response.statusText
-      } `
-    );
+  try {
+    response = await fetch(url, {
+      headers: {
+        "x-cg-demo-api-key": API_KEY,
+        "Content-Type": "application/json",
+      } as Record<string, string>,
+      next: { revalidate },
+    });
+  } catch (cause) {
+    // Network / DNS / timeout / fetch-level failure
+    throw new ApiError({
+      message: "Network error while calling CoinGecko",
+      status: -1,
+      endpoint,
+      url,
+      cause,
+    });
   }
 
-  return response.json();
+  if (!response.ok) {
+    let errorBody: unknown;
+
+    try {
+      errorBody = await response.json();
+    } catch {
+      errorBody = await response.text().catch(() => undefined);
+    }
+
+    throw new ApiError({
+      message: "CoinGecko API responded with an error",
+      status: response.status,
+      endpoint,
+      url,
+      body: errorBody,
+    });
+  }
+
+  try {
+    return (await response.json()) as T;
+  } catch (cause) {
+    throw new ApiError({
+      message: "Failed to parse JSON response",
+      status: response.status,
+      endpoint,
+      url,
+      cause,
+    });
+  }
 }
 
 export async function getPools(
