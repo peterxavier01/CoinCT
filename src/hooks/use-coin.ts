@@ -52,7 +52,7 @@ export const useCoin = (coinId?: string) => {
    * Used for the line chart in the CoinsList component
    */
   const coinsMarketsQuery = useQuery({
-    queryKey: ["coins-markets", coinId],
+    queryKey: ["coins-market-chart", coinId],
     queryFn: () =>
       fetcher<CoinListData[]>(`/coins/${coinId}/market_chart`, {
         vs_currency: "usd",

@@ -11,7 +11,7 @@ const CoinsList = () => {
   const { data: coinsMarkets } = coinsMarketsQuery;
 
   const coinsQuery = useQuery({
-    queryKey: ["coins-markets"],
+    queryKey: ["coins-markets-list"],
     queryFn: () =>
       fetcher<CoinListData[]>("/coins/markets", {
         vs_currency: "usd",
