@@ -1,6 +1,35 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { fetcher } from "@/actions/coin-gecko.actions";
+
+export const fetchTrendingCoins = async () => {
+  const response = await fetcher<TrendingCoinsResponse>(
+    "/search/trending",
+    undefined,
+    300
+  );
+  return response;
+};
+
+export const fetchCoinsList = async () => {
+  const response = await fetcher<CoinListData[]>("/coins/markets", {
+    vs_currency: "usd",
+    symbols: "btc, eth, sol, dot, doge, usdt, usdc, bnb, xrp, ltc",
+    price_change_percentage: "24h",
+  });
+  return response;
+};
+
+export const fetchCoinsMarkets = async (coinId: string) => {
+  const response = await fetcher<CoinMarketChartData>(
+    `/coins/${coinId}/market_chart`,
+    {
+      vs_currency: "usd",
+      days: 1,
+    }
+  );
+  return response;
+};
 
 export const useCoin = (coinId?: string) => {
   const coinQuery = useQuery({
@@ -39,10 +68,9 @@ export const useCoin = (coinId?: string) => {
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
 
-  const trendingCoinsQuery = useQuery({
+  const trendingCoinsQuery = useSuspenseQuery({
     queryKey: ["trending-coins"],
-    queryFn: () =>
-      fetcher<TrendingCoinsResponse>("/search/trending", undefined, 300),
+    queryFn: fetchTrendingCoins,
     staleTime: 1000 * 60 * 30, // 30 minutes
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
@@ -53,14 +81,10 @@ export const useCoin = (coinId?: string) => {
    */
   const coinsMarketsQuery = useQuery({
     queryKey: ["coins-market-chart", coinId],
-    queryFn: () =>
-      fetcher<CoinListData[]>(`/coins/${coinId}/market_chart`, {
-        vs_currency: "usd",
-        days: 1,
-      }),
+    queryFn: () => fetchCoinsMarkets(coinId ?? ""),
+    enabled: !!coinId,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
-    enabled: !!coinId,
   });
 
   return {

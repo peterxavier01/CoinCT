@@ -198,6 +198,14 @@ interface WebSocketMessage {
   identifier?: string;
 }
 
+type TimeSeriesPoint = [number, number];
+
+interface CoinMarketChartData {
+  market_caps: TimeSeriesPoint[];
+  prices: TimeSeriesPoint[];
+  total_volumes: TimeSeriesPoint[];
+}
+
 interface CoinListData {
   id: string;
   symbol: string;

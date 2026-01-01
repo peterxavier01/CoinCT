@@ -3,7 +3,6 @@
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
-import { TrendingCoinsFallback } from "./fallback";
 import DataTable from "../data-table";
 import CoinImage from "../coin-image";
 
@@ -13,10 +12,6 @@ import { useCoin } from "@/hooks/use-coin";
 const TrendingCoins = () => {
   const { trendingCoinsQuery } = useCoin();
   const { data: trendingCoins } = trendingCoinsQuery;
-
-  if (!trendingCoins) {
-    return <TrendingCoinsFallback />;
-  }
 
   const columns: DataTableColumn<TrendingCoin>[] = [
     {
@@ -70,16 +65,18 @@ const TrendingCoins = () => {
 
   return (
     <div id="trending-coins">
-      <h4>Trending Coins</h4>
+      <h4 className="mb-12">Trending Coins</h4>
 
-      <DataTable
-        data={trendingCoins.coins?.slice(0, 6)}
-        columns={columns}
-        rowKey={(coin) => coin.item.id}
-        tableClassName="trending-coins-table"
-        headerCellClassName="py-3! hidden"
-        bodyCellClassName="py-2! border-none"
-      />
+      <div className="mb-auto">
+        <DataTable
+          data={trendingCoins.coins?.slice(0, 6)}
+          columns={columns}
+          rowKey={(coin) => coin.item.id}
+          tableClassName="trending-coins-table"
+          headerCellClassName="py-3! hidden"
+          bodyCellClassName="py-2! border-none"
+        />
+      </div>
     </div>
   );
 };
