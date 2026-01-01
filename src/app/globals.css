@@ -140,6 +140,7 @@
   --green-300: #99e39e;
 
   --red-500: #ff685f;
+  --red-400: #da5c54;
   --yellow-500: #dabe44;
 }
 
@@ -230,7 +231,7 @@
   }
 
   #coin-card {
-    @apply bg-dark-500 hover:bg-dark-400/50 transition-all rounded-lg p-5 border border-purple-600/20 hover:border-purple-600/50 cursor-pointer h-fit;
+    @apply bg-dark-500 hover:bg-dark-400/50 transition-all rounded-lg py-5 px-4 md:px-4.5 border border-purple-600/20 hover:border-purple-600/50 cursor-pointer h-fit;
 
     .header {
       @apply flex gap-3 mb-4;
