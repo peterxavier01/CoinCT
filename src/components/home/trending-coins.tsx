@@ -2,10 +2,10 @@
 
 import { TrendingDown, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 import { TrendingCoinsFallback } from "./fallback";
 import DataTable from "../data-table";
+import CoinImage from "../coin-image";
 
 import { cn, formatCurrency, formatPercentage } from "@/lib/utils";
 import { useCoin } from "@/hooks/use-coin";
@@ -30,13 +30,7 @@ const TrendingCoins = () => {
             href={`/coins/${item.id}`}
             className="flex items-center gap-2.5"
           >
-            <Image src={item.large} alt={item.name} width={48} height={48} />
-            <div>
-              <p>{item.name}</p>
-              <p className="text-sm text-purple-100 font-medium uppercase">
-                {item.symbol}
-              </p>
-            </div>
+            <CoinImage item={item} />
           </Link>
         );
       },
@@ -55,7 +49,7 @@ const TrendingCoins = () => {
               isTrendingUp ? "text-green-500" : "text-red-500"
             )}
           >
-            <p className="flex items-center">
+            <p className="flex items-center gap-1">
               {formatPercentage(item.data.price_change_percentage_24h.usd)}
               {isTrendingUp ? (
                 <TrendingUp width={16} height={16} />

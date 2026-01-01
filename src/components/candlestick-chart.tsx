@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, useTransition } from "react";
 import {
   CandlestickSeries,
@@ -53,8 +55,6 @@ const CandleStickChart = ({
       console.error("Failed to fetch OHLCData", e);
     }
   };
-
-  console.log({ ohlcData });
 
   const handlePeriodChange = (newPeriod: Period) => {
     if (newPeriod === period) return;
