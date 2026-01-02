@@ -74,12 +74,11 @@ const TokensTable = ({ data }: TokensTableProps) => {
   ];
 
   return (
-    <div className="rounded-[0.625rem] overflow-hidden border border-purple-600">
+    <div className="rounded-[0.625rem] overflow-hidden border border-purple-600 mb-10">
       <DataTable
         columns={columns}
         data={data}
         rowKey={(coin) => coin.id}
-        tableClassName="rounded-[10px]!"
         headerCellClassName="py-3! border border-purple-600 px-6!"
         bodyCellClassName="py-2! bg-dark-500 py-6! px-7.5! border border-purple-600 hover:bg-dark-400/80"
       />
