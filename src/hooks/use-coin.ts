@@ -48,6 +48,28 @@ export const fetchCoinsListWithMarketData = async (
   return response;
 };
 
+export const searchCoins = async (query: string) => {
+  const response = await fetcher<SearchResponse>("/search", {
+    query: query,
+  });
+  return response;
+};
+
+export const fetchMarketDataForCoins = async (coinIds: string[]) => {
+  if (coinIds.length === 0) return [];
+
+  // CoinGecko API allows fetching multiple coins by IDs
+  // Using the markets endpoint with ids parameter
+  const ids = coinIds.join(",");
+  const response = await fetcher<CoinListWithMarketData[]>(`/coins/markets`, {
+    vs_currency: "usd",
+    ids: ids,
+    price_change_percentage: "24h",
+    per_page: 250, // Maximum allowed
+  });
+  return response;
+};
+
 export const useCoinById = (coinId?: string) => {
   return useQuery({
     queryKey: ["coin", coinId],
@@ -121,6 +143,32 @@ export const useCoinsListWithMarketData = (page: number, perPage: number) => {
   return useSuspenseQuery({
     queryKey: ["coins-list-with-market-data", page, perPage],
     queryFn: () => fetchCoinsListWithMarketData(page, perPage),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+/**
+ * Search for coins using CoinGecko search API
+ */
+export const useSearchCoins = (query: string) => {
+  return useQuery({
+    queryKey: ["search-coins", query],
+    queryFn: () => searchCoins(query),
+    enabled: query.trim().length > 0,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+/**
+ * Fetch market data for a list of coin IDs
+ */
+export const useMarketDataForCoins = (coinIds: string[]) => {
+  return useQuery({
+    queryKey: ["market-data-for-coins", coinIds.sort().join(",")],
+    queryFn: () => fetchMarketDataForCoins(coinIds),
+    enabled: coinIds.length > 0,
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 5, // 5 minutes
   });

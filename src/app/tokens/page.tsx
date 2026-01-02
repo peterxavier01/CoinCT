@@ -9,9 +9,10 @@ import { Suspense } from "react";
 import SearchInput from "@/components/search-input";
 import ErrorUI from "@/components/error-ui";
 import TokenView from "@/components/tokens/token-view";
+import { TokensViewFallback } from "@/components/home/fallback";
 
 import { fetchCoinsListWithMarketData } from "@/hooks/use-coin";
-import { TokensViewFallback } from "@/components/home/fallback";
+import { SearchProvider } from "@/contexts/search-context";
 
 interface TokensPageProps {
   params: Promise<{ [key: string]: string }>;
@@ -37,16 +38,18 @@ export default async function TokensPage({ searchParams }: TokensPageProps) {
       }
     >
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <main className="main-container">
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-5">
-            <h1 className="text-2xl font-semibold">All Tokens</h1>
-            <SearchInput />
-          </div>
+        <SearchProvider>
+          <main className="main-container">
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-5">
+              <h1 className="text-2xl font-semibold">All Tokens</h1>
+              <SearchInput />
+            </div>
 
-          <Suspense fallback={<TokensViewFallback />}>
-            <TokenView currentPage={currentPage} perPage={perPage} />
-          </Suspense>
-        </main>
+            <Suspense fallback={<TokensViewFallback />}>
+              <TokenView currentPage={currentPage} perPage={perPage} />
+            </Suspense>
+          </main>
+        </SearchProvider>
       </HydrationBoundary>
     </ErrorBoundary>
   );

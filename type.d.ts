@@ -106,14 +106,33 @@ interface TrendingCoinsResponse {
 interface SearchCoin {
   id: string;
   name: string;
+  api_symbol: string;
   symbol: string;
   market_cap_rank: number | null;
   thumb: string;
   large: string;
-  data: {
-    price?: number;
-    price_change_percentage_24h: number;
-  };
+}
+
+interface SearchResponse {
+  coins: SearchCoin[];
+  exchanges: Array<{
+    id: string;
+    name: string;
+    market_type: string;
+    thumb: string;
+    large: string;
+  }>;
+  icos: string[];
+  categories: Array<{
+    id: string;
+    name: string;
+  }>;
+  nfts: Array<{
+    id: string;
+    name: string;
+    symbol: string;
+    thumb: string;
+  }>;
 }
 
 // Chart Section Props (used in ChartSection.tsx)
