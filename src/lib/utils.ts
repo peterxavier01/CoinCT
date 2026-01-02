@@ -84,39 +84,71 @@ export function convertOHLCData(data: OHLCData[]) {
 }
 
 export const ELLIPSIS = "ellipsis" as const;
+
+export type PageNumberItem =
+  | { id: string; value: number; type: "page" }
+  | { id: string; value: typeof ELLIPSIS; type: "ellipsis" };
+
 export const buildPageNumbers = (
   currentPage: number,
   totalPages: number
-): (number | typeof ELLIPSIS)[] => {
+): PageNumberItem[] => {
   const MAX_VISIBLE_PAGES = 5;
+  let ellipsisCounter = 0;
 
-  const pages: (number | typeof ELLIPSIS)[] = [];
+  const pages: PageNumberItem[] = [];
 
   if (totalPages <= MAX_VISIBLE_PAGES) {
     for (let i = 1; i <= totalPages; i += 1) {
-      pages.push(i);
+      pages.push({
+        id: `page-${i}`,
+        value: i,
+        type: "page",
+      });
     }
     return pages;
   }
 
-  pages.push(1);
+  pages.push({
+    id: "page-1",
+    value: 1,
+    type: "page",
+  });
 
   const start = Math.max(2, currentPage - 1);
   const end = Math.min(totalPages - 1, currentPage + 1);
 
   if (start > 2) {
-    pages.push(ELLIPSIS);
+    ellipsisCounter += 1;
+    pages.push({
+      id: `ellipsis-${ellipsisCounter}`,
+      value: ELLIPSIS,
+      type: "ellipsis",
+    });
   }
 
   for (let i = start; i <= end; i += 1) {
-    pages.push(i);
+    pages.push({
+      id: `page-${i}`,
+      value: i,
+      type: "page",
+    });
   }
 
   if (end < totalPages - 1) {
-    pages.push(ELLIPSIS);
+    ellipsisCounter += 1;
+    pages.push({
+      id: `ellipsis-${ellipsisCounter}`,
+      value: ELLIPSIS,
+      type: "ellipsis",
+    });
   }
 
-  pages.push(totalPages);
+  pages.push({
+    id: `page-${totalPages}`,
+    value: totalPages,
+    type: "page",
+  });
 
   return pages;
 };
