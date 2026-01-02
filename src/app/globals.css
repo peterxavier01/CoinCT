@@ -502,6 +502,40 @@
     }
   }
 
+  #tokens-pagination-fallback {
+    .pagination-content {
+      @apply flex items-center justify-center gap-2;
+    }
+
+    .pagination-control-skeleton {
+      @apply h-10 w-10 rounded;
+    }
+
+    .pagination-page-skeleton {
+      @apply h-10 w-10 rounded;
+    }
+  }
+
+  .rank-skeleton {
+    @apply h-5 w-8;
+  }
+
+  .token-image {
+    @apply h-9 w-9 rounded-full;
+  }
+
+  .token-name {
+    @apply h-5 w-32;
+  }
+
+  .price-skeleton {
+    @apply h-5 w-20;
+  }
+
+  .change-skeleton {
+    @apply h-5 w-16;
+  }
+
   #coin-details-page {
     @apply py-12 px-4 sm:px-6 mx-auto max-w-360 size-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 items-center gap-6 xl:gap-10 justify-center;
 
