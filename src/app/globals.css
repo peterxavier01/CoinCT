@@ -155,7 +155,7 @@
 
 @layer components {
   .container {
-    @apply px-4 sm:px-6 mx-auto max-w-360;
+    @apply px-4 sm:px-6 mx-auto max-w-360 font-sans;
   }
 
   .main-container {
@@ -345,7 +345,7 @@
       }
 
       .price-cell {
-        @apply font-bold pr-5 text-sm max-w-full truncate;
+        @apply font-medium pr-5 text-sm max-w-full truncate;
       }
 
       .price-change {
@@ -589,7 +589,7 @@
       @apply bg-dark-500 rounded-xl max-h-fit overflow-hidden;
 
       .rank-cell {
-        @apply pl-5 max-w-20! py-5 font-medium text-purple-100;
+        @apply max-w-5! font-medium text-purple-100;
 
         a {
           @apply absolute inset-0 z-10;
@@ -871,7 +871,7 @@
       }
 
       .page-link-active {
-        @apply bg-green-500! text-dark-900 font-semibold;
+        @apply bg-green-500! hover:bg-green-500! text-dark-900 hover:text-dark-900! font-semibold;
       }
     }
   }
@@ -921,6 +921,15 @@
       .time-cell {
         @apply pr-5;
       }
+    }
+  }
+
+  #error-ui {
+    @apply w-full;
+
+    button,
+    a {
+      @apply transition-all;
     }
   }
 }
