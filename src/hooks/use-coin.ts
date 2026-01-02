@@ -2,6 +2,11 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { fetcher } from "@/actions/coin-gecko.actions";
 
+/**
+ * Note: useSuspenseQuery should not be used in an aggregated hook
+ * because it will cause the hook to hang until all the queries are resolved
+ */
+
 export const fetchTrendingCoins = async () => {
   const response = await fetcher<TrendingCoinsResponse>(
     "/search/trending",
@@ -31,8 +36,20 @@ export const fetchCoinsMarkets = async (coinId: string) => {
   return response;
 };
 
-export const useCoin = (coinId?: string) => {
-  const coinQuery = useQuery({
+export const fetchCoinsListWithMarketData = async (
+  page: number = 1,
+  perPage: number = 10
+) => {
+  const response = await fetcher<CoinListWithMarketData[]>(`/coins/markets`, {
+    vs_currency: "usd",
+    per_page: perPage,
+    page: page,
+  });
+  return response;
+};
+
+export const useCoinById = (coinId?: string) => {
+  return useQuery({
     queryKey: ["coin", coinId],
     queryFn: () =>
       fetcher<CoinDetailsData>(`/coins/${coinId}`, {
@@ -42,8 +59,10 @@ export const useCoin = (coinId?: string) => {
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
+};
 
-  const ohlcQuery = useQuery({
+export const useCoinOhlc = (coinId?: string) => {
+  return useQuery({
     queryKey: ["coin-ohlc", coinId],
     queryFn: () =>
       fetcher<OHLCData[]>(`/coins/${coinId}/ohlc`, {
@@ -55,8 +74,10 @@ export const useCoin = (coinId?: string) => {
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
+};
 
-  const coinsQuery = useQuery({
+export const useCoinsMarkets = () => {
+  return useQuery({
     queryKey: ["coins-markets"],
     queryFn: () =>
       fetcher<CoinListData[]>("/coins/markets", {
@@ -67,31 +88,40 @@ export const useCoin = (coinId?: string) => {
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
+};
 
-  const trendingCoinsQuery = useSuspenseQuery({
+export const useTrendingCoins = () => {
+  return useSuspenseQuery({
     queryKey: ["trending-coins"],
     queryFn: fetchTrendingCoins,
     staleTime: 1000 * 60 * 30, // 30 minutes
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
+};
 
-  /**
-   * Get the coins markets
-   * Used for the line chart in the CoinsList component
-   */
-  const coinsMarketsQuery = useQuery({
+/**
+ * Get the coins markets
+ * Used for the line chart in the CoinsList component
+ */
+export const useCoinsMarketChart = (coinId?: string) => {
+  return useQuery({
     queryKey: ["coins-market-chart", coinId],
     queryFn: () => fetchCoinsMarkets(coinId ?? ""),
     enabled: !!coinId,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     gcTime: 1000 * 60 * 60 * 24, // 24 hours
   });
+};
 
-  return {
-    coinQuery,
-    ohlcQuery,
-    coinsQuery,
-    trendingCoinsQuery,
-    coinsMarketsQuery,
-  };
+/**
+ * Get the coins list with market data.
+ * Used for the tokens table
+ */
+export const useCoinsListWithMarketData = (page: number, perPage: number) => {
+  return useSuspenseQuery({
+    queryKey: ["coins-list-with-market-data", page, perPage],
+    queryFn: () => fetchCoinsListWithMarketData(page, perPage),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 5, // 5 minutes
+  });
 };
