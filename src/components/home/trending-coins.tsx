@@ -7,11 +7,10 @@ import DataTable from "../data-table";
 import CoinImage from "../coin-image";
 
 import { cn, formatCurrency, formatPercentage } from "@/lib/utils";
-import { useCoin } from "@/hooks/use-coin";
+import { useTrendingCoins } from "@/hooks/use-coin";
 
 const TrendingCoins = () => {
-  const { trendingCoinsQuery } = useCoin();
-  const { data: trendingCoins } = trendingCoinsQuery;
+  const { data: trendingCoinsData } = useTrendingCoins();
 
   const columns: DataTableColumn<TrendingCoin>[] = [
     {
@@ -69,7 +68,7 @@ const TrendingCoins = () => {
 
       <div className="mb-auto">
         <DataTable
-          data={trendingCoins.coins?.slice(0, 6)}
+          data={trendingCoinsData?.coins?.slice(0, 6)}
           columns={columns}
           rowKey={(coin) => coin.item.id}
           tableClassName="trending-coins-table"

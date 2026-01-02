@@ -8,7 +8,7 @@ import CoinImage from "../coin-image";
 import LineSeriesChart from "../line-series-chart";
 
 import { cn, formatCurrency, formatPercentage } from "@/lib/utils";
-import { useCoin } from "@/hooks/use-coin";
+import { useCoinsMarketChart } from "@/hooks/use-coin";
 
 interface CoinCardProps {
   id: string;
@@ -16,14 +16,14 @@ interface CoinCardProps {
 }
 
 const CoinCard = ({ id, coin }: CoinCardProps) => {
-  const { coinsMarketsQuery } = useCoin(id);
+  const { data: coinsMarketChartData } = useCoinsMarketChart(id);
   const isTrendingUp = coin.price_change_percentage_24h > 0;
   const isTrendingDown = coin.price_change_percentage_24h < 0;
 
   // Transform the market chart data to the format expected by LineSeriesChart
   // CoinGecko returns timestamps in milliseconds, lightweight-charts expects seconds
   const chartData =
-    coinsMarketsQuery.data?.prices?.map((price) => ({
+    coinsMarketChartData?.prices?.map((price) => ({
       value: price[1],
       time: (price[0] / 1000) as Time,
     })) || [];

@@ -6,23 +6,21 @@ import CoinSelector from "./coin-selector";
 import { CoinOverviewFallback } from "./fallback";
 import ChartHeader from "./chart-header";
 
-import { useCoin } from "@/hooks/use-coin";
+import { useCoinById, useCoinOhlc, useCoinsMarkets } from "@/hooks/use-coin";
 import CandlestickChart from "../candlestick-chart";
 
 const CoinOverview = () => {
   const [coinId, setCoinId] = useState<string>("bitcoin");
 
-  const { coinQuery, ohlcQuery, coinsQuery } = useCoin(coinId);
+  const { data: coinData } = useCoinById(coinId);
+  const { data: coinOHLCData } = useCoinOhlc(coinId);
+  const { data: coinsData } = useCoinsMarkets();
 
-  const { data: coin } = coinQuery;
-  const { data: coinOHLCData } = ohlcQuery;
-  const { data: coins } = coinsQuery;
-
-  if (!coin || !coinOHLCData || !coins) {
+  if (!coinData || !coinOHLCData || !coinsData) {
     return <CoinOverviewFallback />;
   }
 
-  const formattedCoins: FormattedCoin[] = coins.map((coin) => ({
+  const formattedCoins: FormattedCoin[] = coinsData.map((coin) => ({
     id: coin.id,
     symbol: coin.symbol,
     name: coin.name,
@@ -44,7 +42,7 @@ const CoinOverview = () => {
       </div>
 
       <CandlestickChart data={coinOHLCData} coinId={coinId}>
-        <ChartHeader key={coin.id} coin={coin} />
+        <ChartHeader key={coinData.id} coin={coinData} />
       </CandlestickChart>
     </section>
   );
