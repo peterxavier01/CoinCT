@@ -21,7 +21,7 @@ const TrendingCoins = () => {
 
         return (
           <Link
-            href={`/coins/${item.id}`}
+            href={`/tokens/${item.id}`}
             className="flex items-center gap-2.5"
           >
             <CoinImage item={item} />

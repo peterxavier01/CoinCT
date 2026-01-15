@@ -29,7 +29,7 @@ const CoinCard = ({ id, coin }: CoinCardProps) => {
     })) || [];
 
   return (
-    <Link href={`/coins/${coin.id}`} id="coin-card">
+    <Link href={`/tokens/${coin.id}`} id="coin-card">
       <div className="flex items-center gap-2.5">
         <CoinImage
           item={{ large: coin.image, name: coin.name, symbol: coin.symbol }}
